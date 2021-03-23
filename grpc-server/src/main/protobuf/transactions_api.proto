@@ -1,0 +1,55 @@
+syntax = "proto3";
+package plix.grpc;
+option java_package = "com.plixlatform.api.grpc";
+option csharp_namespace = "Plix.Grpc";
+
+import "recipient.proto";
+import "transaction.proto";
+
+service TransactionsApi {
+    rpc GetTransactions (TransactionsRequest) returns (stream TransactionResponse);
+    rpc GetStateChanges (TransactionsRequest) returns (stream plix.InvokeScriptResult);
+    rpc GetStatuses (TransactionsByIdRequest) returns (stream TransactionStatus);
+    rpc GetUnconfirmed (TransactionsRequest) returns (stream TransactionResponse);
+
+    rpc Sign (SignRequest) returns (plix.SignedTransaction);
+    rpc Broadcast (plix.SignedTransaction) returns (plix.SignedTransaction);
+}
+
+message TransactionStatus {
+    enum Status {
+        NOT_EXISTS = 0;
+        UNCONFIRMED = 1;
+        CONFIRMED = 2;
+    }
+
+    bytes id = 1;
+    Status status = 2;
+    int64 height = 3;
+}
+
+message TransactionResponse {
+    bytes id = 1;
+    int64 height = 2;
+    plix.SignedTransaction transaction = 3;
+}
+
+message TransactionsRequest {
+    bytes sender = 1;
+    plix.Recipient recipient = 2;
+    repeated bytes transaction_ids = 3;
+}
+
+message TransactionsByIdRequest {
+    repeated bytes transaction_ids = 3;
+}
+
+message CalculateFeeResponse {
+    bytes asset_id = 1;
+    uint64 amount = 2;
+}
+
+message SignRequest {
+    plix.Transaction transaction = 1;
+    bytes signer_public_key = 2;
+}

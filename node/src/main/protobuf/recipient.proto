@@ -1,0 +1,12 @@
+// Transactions
+syntax = "proto3";
+package plix;
+option java_package = "com.plixlatform.protobuf.transaction";
+option csharp_namespace = "Plix";
+
+message Recipient {
+    oneof recipient {
+        bytes address = 1;
+        string alias = 2;
+    };
+};
