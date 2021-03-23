@@ -1,0 +1,9 @@
+// Transactions
+syntax = "proto3";
+package plix;
+option java_package = "com.plixplatform.protobuf.transaction";
+option csharp_namespace = "Plix";
+
+message Script {
+    bytes bytes = 1;
+}
